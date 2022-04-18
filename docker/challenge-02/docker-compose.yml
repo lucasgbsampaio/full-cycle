@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    build:
+      context: nginx
+    networks:
+      - fullcycle-network
+    ports:
+      - '8080:80'
+    depends_on:
+      - app
+
+  app:
+    container_name: app
+    build:
+      context: app
+    restart: unless-stopped
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 20s node index.js
+    networks:
+      - fullcycle-network
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: mysql
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=fullcycle
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - fullcycle-network
+
+networks:
+  fullcycle-network:
+    driver: bridge
