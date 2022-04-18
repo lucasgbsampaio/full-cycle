@@ -13,3 +13,7 @@ $ docker build -t challenge-01 .
 # Execute a imagem
 $ docker run challenge-01
 ```
+
+### Link da imagem no Docker Hub
+
+https://hub.docker.com/repository/docker/lucasfe4nor/docker-fullcycle-challenge-01
